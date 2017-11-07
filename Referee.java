@@ -110,8 +110,15 @@ class PongReferee extends Referee<PongPlayer> {
      */
     @Override
     void update() {
-        // Read players actions
+        // Send new inputs with the updated positions
         for (PongPlayer p : gameManager.getActivePlayers()) {
+            PongPlayerInputs inputs = new PongPlayerInputs();
+            inputs.meY = p.sprite.getY();
+            inputs.opponentY = gameManager.getPlayer((p.getIndex() + 1) % 2).sprite.getY();
+            inputs.ballX = ball.getX();
+            inputs.ballY = ball.getY();
+            p.sendInputs(inputs);
+
             PongPlayerActions actions;
             try {
                 actions = p.readActions(50); // blocking (max timeout of 50 ms)
@@ -122,23 +129,13 @@ class PongReferee extends Referee<PongPlayer> {
             }
         }
 
-        // Flush entities update
-        world.update();
-
         if (ball.getX() < 0) {
             gameManager.getPlayer(0).die("give the reason explanation...");
         } else if (ball.getX() > world.getWidth()) {
             gameManager.getPlayer(1).die("give the reason explanation...");
         }
 
-        // Send new inputs with the updated positions
-        for (PongPlayer p : gameManager.getActivePlayers()) {
-            PongPlayerInputs inputs = new PongPlayerInputs();
-            inputs.meY = p.sprite.getY();
-            inputs.opponentY = gameManager.getPlayer((p.getIndex() + 1) % 2).sprite.getY();
-            inputs.ballX = ball.getX();
-            inputs.ballY = ball.getY();
-            p.sendInputs(inputs);
-        }
+        // Flush entities update
+        world.update();
     }
 }
