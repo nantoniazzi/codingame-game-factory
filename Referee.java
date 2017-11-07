@@ -117,11 +117,9 @@ class PongReferee extends Referee<PongPlayer> {
             inputs.opponentY = gameManager.getPlayer((p.getIndex() + 1) % 2).sprite.getY();
             inputs.ballX = ball.getX();
             inputs.ballY = ball.getY();
-            p.sendInputs(inputs);
 
-            PongPlayerActions actions;
             try {
-                actions = p.readActions(50); // blocking (max timeout of 50 ms)
+                PongPlayerActions actions = p.sendInputsAndWaitActions(inputs, 50); // blocking (max timeout of 50 ms)
                 int deltaMove = actions.desiredY - p.sprite.getY();
                 deltaMove = clamp(deltaMove, -20, 20);
                 p.sprite.setY(clamp(p.sprite.getY() + deltaMove, 20, world.getHeight() - 20));
@@ -134,8 +132,5 @@ class PongReferee extends Referee<PongPlayer> {
         } else if (ball.getX() > world.getWidth()) {
             gameManager.getPlayer(1).die("give the reason explanation...");
         }
-
-        // Flush entities update
-        world.update();
     }
 }

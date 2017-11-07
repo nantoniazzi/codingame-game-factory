@@ -51,13 +51,6 @@ abstract class Player<TPlayerInputs extends PlayerInputs, TPlayerActions extends
 
     Integer expectedNbLines = null;
 
-    TPlayerActions readActions(int timeout) throws ReadActionsException, PlayerTimeoutException {
-        int lines = expectedNbLines != null ? expectedNbLines : inOutManager.getExpectedNbLines();
-
-        List<String> actions = inOutManager.readActions(lines, timeout);
-        return deserialize(actions);
-    }
-
     abstract TPlayerActions deserialize(List<String> actions);
 
     abstract List<String> serialize(TPlayerInputs inputs);
@@ -70,8 +63,10 @@ abstract class Player<TPlayerInputs extends PlayerInputs, TPlayerActions extends
         return index;
     }
 
-    List<String> sendInputs(TPlayerInputs inputs) {
-        return serialize(inputs);
+    TPlayerActions sendInputsAndWaitActions(TPlayerInputs inputs, int timeout) throws ReadActionsException, PlayerTimeoutException {
+        int lines = expectedNbLines != null ? expectedNbLines : inOutManager.getExpectedNbLines();
+        inOutManager.sendInputs(serialize(inputs));
+        return deserialize(inOutManager.readActions(lines, timeout));
     }
 
     void die(String reason) {
