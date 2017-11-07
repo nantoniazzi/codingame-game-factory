@@ -41,7 +41,7 @@ abstract class InOutManager {
     abstract int getExpectedNbLines();
 }
 
-abstract class Player<TPlayerActions extends PlayerActions, TPlayerInputs extends PlayerInputs> {
+abstract class Player<TPlayerInputs extends PlayerInputs, TPlayerActions extends PlayerActions> {
     @Inject InOutManager inOutManager;
 
     int index;
@@ -88,7 +88,7 @@ interface ResourcesManager {
     void registerAndLoadTexture(String id, String uri);
 }
 
-abstract class Referee<TPlayer extends Player<? extends PlayerActions, ? extends PlayerInputs>> {
+abstract class Referee<TPlayer extends Player<? extends PlayerInputs, ? extends PlayerActions>> {
     @Inject GameManager<TPlayer> gameManager;
     @Inject World world;
     @Inject ResourcesManager resourcesManager;

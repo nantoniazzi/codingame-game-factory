@@ -1,10 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class PongPlayerActions implements PlayerActions {
-    int desiredY;
-}
-
 class PongPlayerInputs implements PlayerInputs {
     int meY;
     int opponentY;
@@ -12,7 +8,11 @@ class PongPlayerInputs implements PlayerInputs {
     int ballY;
 }
 
-class PongPlayer extends Player<PongPlayerActions, PongPlayerInputs> {
+class PongPlayerActions implements PlayerActions {
+    int desiredY;
+}
+
+class PongPlayer extends Player<PongPlayerInputs, PongPlayerActions> {
 
     Sprite sprite;
 
