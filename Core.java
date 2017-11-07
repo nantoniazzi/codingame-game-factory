@@ -55,12 +55,12 @@ abstract class Player<TPlayerInputs extends PlayerInputs, TPlayerActions extends
         int lines = expectedNbLines != null ? expectedNbLines : inOutManager.getExpectedNbLines();
 
         List<String> actions = inOutManager.readActions(lines, timeout);
-        return serialize(actions);
+        return deserialize(actions);
     }
 
-    abstract TPlayerActions serialize(List<String> actions);
+    abstract TPlayerActions deserialize(List<String> actions);
 
-    abstract List<String> deserialize(TPlayerInputs inputs);
+    abstract List<String> serialize(TPlayerInputs inputs);
 
     boolean isActive() {
         return active;
@@ -71,7 +71,7 @@ abstract class Player<TPlayerInputs extends PlayerInputs, TPlayerActions extends
     }
 
     List<String> sendInputs(TPlayerInputs inputs) {
-        return deserialize(inputs);
+        return serialize(inputs);
     }
 
     void die(String reason) {

@@ -17,14 +17,14 @@ class PongPlayer extends Player<PongPlayerInputs, PongPlayerActions> {
     Sprite sprite;
 
     @Override
-    PongPlayerActions serialize(List<String> actions) {
+    PongPlayerActions deserialize(List<String> actions) {
         PongPlayerActions playerActions = new PongPlayerActions();
         playerActions.desiredY = Integer.valueOf(actions.get(0));
         return playerActions;
     }
 
     @Override
-    List<String> deserialize(PongPlayerInputs inputs) {
+    List<String> serialize(PongPlayerInputs inputs) {
         List<String> ret = new ArrayList<>();
         ret.add(String.valueOf(inputs.meY));
         ret.add(String.valueOf(inputs.opponentY));
