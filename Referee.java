@@ -18,9 +18,9 @@ class PongPlayer extends Player<PongPlayerActions, PongPlayerInputs> {
 
     @Override
     PongPlayerActions serialize(List<String> actions) {
-        PongPlayerActions command = new PongPlayerActions();
-        command.desiredY = Integer.valueOf(actions.get(0));
-        return command;
+        PongPlayerActions playerActions = new PongPlayerActions();
+        playerActions.desiredY = Integer.valueOf(actions.get(0));
+        return playerActions;
     }
 
     @Override
@@ -36,7 +36,7 @@ class PongPlayer extends Player<PongPlayerActions, PongPlayerInputs> {
 class PongReferee extends Referee<PongPlayer> {
 
     Sprite ball;
-    
+
     @Override
     void load() {
         resourcesManager.loadConfig("https://www.codingame.com/game-factory/default.json");
@@ -54,44 +54,44 @@ class PongReferee extends Referee<PongPlayer> {
         gameManager.setExpectedNbLineOutput(1);
 
         world.setSize(1000, 1000);
-//        world.setGravity(0);
+        //world.setGravity(0);
 
         ball = world.createSprite();
         ball.setPosition(world.getWidth() / 2, world.getHeight() / 2);
         ball.setTexture("ball", 0.5, 0.5);
         ball.setScale(1.0);
-//        ball.enableBody(true);
-//        ball.getBody().setSpeed(new Vector(1.0, 1.0));
-//        ball.getBody().setMass(1.0);
-//        ball.getBody().addShape(new BodyCircleShape(0, 0, 1.0));
+        //ball.enableBody(true);
+        //ball.getBody().setSpeed(new Vector(1.0, 1.0));
+        //ball.getBody().setMass(1.0);
+        //ball.getBody().addShape(new BodyCircleShape(0, 0, 1.0));
 
         Sprite topWall = world.createSprite();
         topWall.setPosition(0, 0);
         topWall.setTexture("wall");
-//        topWall.enableBody(true);        
-//        topWall.getBody().addShape(new BodyRectShape(0, 0, world.getWidth(), 5));
+        //topWall.enableBody(true);        
+        //topWall.getBody().addShape(new BodyRectShape(0, 0, world.getWidth(), 5));
 
         Sprite bottomWall = world.createSprite();
         bottomWall.setPosition(world.getHeight() - 5, 0);
         bottomWall.setTexture("wall");
-//        bottomWall.enableBody(true);
-//        bottomWall.getBody().addShape(new BodyRectShape(0, 0, world.getWidth(), 5));
-        
+        //bottomWall.enableBody(true);
+        //bottomWall.getBody().addShape(new BodyRectShape(0, 0, world.getWidth(), 5));
+
         PongPlayer p0 = gameManager.getPlayer(0);
         p0.sprite = world.createSprite();
         p0.sprite.setPosition(10, world.getHeight() / 2);
-//        p0.setTexture("bar", 0.5, 0.5);
-//        p0.enableBody(true);        
-//        p0.getBody().addShape(new BodyRectShape(-5, -20, 5, 20));
-//        p0.setColor("0xff0000");
+        p0.sprite.setColor("0xff0000");
+        p0.sprite.setTexture("bar", 0.5, 0.5);
+        //p0.enableBody(true);        
+        //p0.getBody().addShape(new BodyRectShape(-5, -20, 5, 20));
 
         PongPlayer p1 = gameManager.getPlayer(0);
         p1.sprite = world.createSprite();
         p1.sprite.setPosition(world.getWidth() - 10, world.getHeight() / 2);
-//      p1.setTexture("bar", 0.5, 0.5);
-//      p1.enableBody(true);        
-//      p1.getBody().addShape(new BodyRectShape(-5, -20, 5, 20));
-//      p1.setColor("0x00ff00");
+        p1.sprite.setColor("0x00ff00");
+        p1.sprite.setTexture("bar", 0.5, 0.5);
+        //p1.enableBody(true);        
+        //p1.getBody().addShape(new BodyRectShape(-5, -20, 5, 20));
     }
 
     @Override

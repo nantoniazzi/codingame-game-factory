@@ -211,6 +211,11 @@ class Sprite extends Entity {
         // TODO Auto-generated method stub
         
     }
+
+    public void setColor(String string) {
+        // TODO Auto-generated method stub
+        
+    }
 }
 
 class ReadActionsException extends Exception {
