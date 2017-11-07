@@ -96,10 +96,10 @@ abstract class Referee<TPlayer extends Player<? extends PlayerInputs, ? extends 
     void load() {
     }
 
-    void start() {
+    void init() {
     }
 
-    abstract void run();
+    abstract void start();
 
     abstract void update();
 

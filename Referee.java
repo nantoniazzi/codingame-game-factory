@@ -49,8 +49,19 @@ class PongReferee extends Referee<PongPlayer> {
         resourcesManager.registerAndLoadReplay("replay2", 548452);
     }
 
+    /**
+     * Executed when the viewer is loaded
+     */
+    public void init() {
+        //replayManager.playLoop("replay1", "replay2");
+        //world.showSplashLogo("logo");
+    }
+
+    /**
+     * Executed when the game is played
+     */
     @Override
-    void run() {
+    void start() {
         gameManager.setExpectedNbLineOutput(1);
 
         world.setSize(1000, 1000);
@@ -94,8 +105,12 @@ class PongReferee extends Referee<PongPlayer> {
         //p1.getBody().addShape(new BodyRectShape(-5, -20, 5, 20));
     }
 
+    /**
+     * Game loop
+     */
     @Override
     void update() {
+        // Read players actions
         for (PongPlayer p : gameManager.getActivePlayers()) {
             PongPlayerActions actions;
             try {
@@ -107,14 +122,16 @@ class PongReferee extends Referee<PongPlayer> {
             }
         }
 
+        // Flush entities update
         world.update();
 
         if (ball.getX() < 0) {
-            gameManager.getPlayer(0).die("");
+            gameManager.getPlayer(0).die("give the reason explanation...");
         } else if (ball.getX() > world.getWidth()) {
-            gameManager.getPlayer(1).die("");
+            gameManager.getPlayer(1).die("give the reason explanation...");
         }
 
+        // Send new inputs with the updated positions
         for (PongPlayer p : gameManager.getActivePlayers()) {
             PongPlayerInputs inputs = new PongPlayerInputs();
             inputs.meY = p.sprite.getY();
