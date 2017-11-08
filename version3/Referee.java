@@ -36,7 +36,7 @@ class PongReferee extends Referee<PongPlayer> {
      * Just before starting the Game Loop
      */
     @Override
-    void onStart() {
+    void onFirstFrame() {
         ball = physicalWorld.createCirlce("physical-ball")
                 .setX(world.getWidth() / 2)
                 .setY(world.getHeight() / 2)
@@ -78,7 +78,7 @@ class PongReferee extends Referee<PongPlayer> {
      * Game loop
      */
     @Override
-    void onUpdate() {
+    void onUpdateFrame(int frameIndex) {
         // Send new inputs with the updated positions
         for (PongPlayer p : gameManager.getActivePlayers()) {
             List<String> inputs = new ArrayList<>();

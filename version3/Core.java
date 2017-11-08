@@ -296,9 +296,9 @@ abstract class Referee<TPlayer> {
     void onInit() {
     }
 
-    abstract void onStart();
+    abstract void onFirstFrame();
 
-    abstract void onUpdate();
+    abstract void onUpdateFrame(int frameIndex);
 
     Map<Integer, Integer> getScore() {
         return new HashMap<>();
