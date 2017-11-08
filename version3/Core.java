@@ -64,8 +64,9 @@ class PhysicalEntity extends Entity {
         super(id);
     }
 
-    void onImpact(ImpactHandler impactHandler) {
+    PhysicalEntity onImpact(ImpactHandler impactHandler) {
         this.impactHandler = impactHandler;
+        return this;
     }
 
     boolean defaultImpactBehaviour(Impact impact) {
@@ -120,6 +121,11 @@ class CirclePhysicalEntity extends PhysicalEntity {
 
     public CirclePhysicalEntity setRadius(double r) {
         this.radius = r;
+        return this;
+    }
+    
+    public CirclePhysicalEntity onImpact(ImpactHandler impactHandler) {
+        this.impactHandler = impactHandler;
         return this;
     }
 }

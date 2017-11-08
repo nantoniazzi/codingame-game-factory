@@ -54,9 +54,8 @@ class PongReferee extends Referee<PongPlayer> {
                 .setX(world.getWidth() / 2)
                 .setY(world.getHeight() / 2)
                 .setRadius(5.0)
+                .onImpact(this::handleBallImpact)
                 .addChild(world.createSprite("ball").setTexture("ball", 0.5, 0.5));
-
-        ball.onImpact(this::handleBallImpact);
 
         physicalWorld.createRect("physical-top-wall")
                 .setWidth(world.getWidth())
