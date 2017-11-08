@@ -29,6 +29,7 @@ class PongReferee extends Referee<PongPlayer> {
         world.setSplashLogo("logo");
         world.createSprite("background").setTexture("background");
         replayManager.playLoop("replay1", "replay2");
+        gameManager.setTimeouts(1000, 50);
     }
 
     /**
@@ -84,15 +85,17 @@ class PongReferee extends Referee<PongPlayer> {
             inputs.add(String.valueOf(p.entity.getY()));
             inputs.add(String.valueOf(gameManager.getPlayer((p.getIndex() + 1) % 2).entity.getY()));
             inputs.add(String.format("%d %d", ball.getX(), ball.getY()));
+            p.setInputs(inputs);
+            p.setExpectedNbLines(1);
+        }
+        
+        gameManager.callPlayers();
 
-            try {
-                List<String> action = p.sendInputsAndWaitActions(inputs, 50, 1); // blocking (max timeout of 50 ms)
-                int deltaMove = Integer.parseInt(action.get(0)) - p.entity.getY();
-                deltaMove = clamp(deltaMove, -20, 20);
-                int newPosY = p.entity.getY() + deltaMove;
-                p.entity.setY(clamp(newPosY, 20, world.getHeight() - 20));
-            } catch (ReadActionsException | PlayerTimeoutException e) {
-            }
+        for (PongPlayer p : gameManager.getActivePlayers()) {
+            int deltaMove = Integer.parseInt(p.getActions().get(0)) - p.entity.getY();
+            deltaMove = clamp(deltaMove, -20, 20);
+            int newPosY = p.entity.getY() + deltaMove;
+            p.entity.setY(clamp(newPosY, 20, world.getHeight() - 20));
         }
 
         physicalWorld.update();
@@ -101,6 +104,10 @@ class PongReferee extends Referee<PongPlayer> {
             gameManager.getPlayer(0).die("give the reason explanation...");
         } else if (ball.getX() >= world.getWidth()) {
             gameManager.getPlayer(1).die("give the reason explanation...");
+        }
+        
+        if(gameManager.getActivePlayers().size() == 1) {
+            gameManager.endGame();
         }
     }
 

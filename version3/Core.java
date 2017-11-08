@@ -25,9 +25,17 @@ abstract class GameManager<TPlayer> {
 
     abstract TPlayer getPlayer(int index);
 
-    abstract void end();
+    abstract void endGame();
 
     abstract List<TPlayer> getPlayers();
+
+    public void callPlayers() {
+    }
+
+    public void setTimeouts(int initialTimeout, int turnTimeout) {
+        // TODO Auto-generated method stub
+        
+    }
 }
 
 abstract class InOutManager {
@@ -214,21 +222,32 @@ abstract class Player {
     Integer score;
 
     Integer expectedNbLines = null;
+    List<String> inputs;
+    List<String> actions;
 
     boolean isActive() {
         return active;
     }
+    
+    public List<String> getActions() {
+        return null;
+    }
+
 
     int getIndex() {
         return index;
     }
 
-    List<String> sendInputsAndWaitActions(List<String> inputs, int timeout, int expectedNumberOfLi)
+    private List<String> sendInputsAndWaitActions(List<String> inputs, int timeout, int expectedNumberOfLi)
             throws ReadActionsException, PlayerTimeoutException {
         //        int lines = expectedNbLines != null ? expectedNbLines : inOutManager.getExpectedNbLines();
         //        inOutManager.sendInputs(serialize(inputs));
         //        return deserialize(inOutManager.readActions(lines, timeout));
         return new ArrayList<>();
+    }
+
+    public void setInputs(List<String> inputs) {
+        
     }
 
     void die(String reason) {
@@ -242,6 +261,10 @@ abstract class Player {
 
     public void setScore(int score) {
         this.score = score;
+    }
+    
+    public void setExpectedNbLines(int expectedNbLines) {
+        this.expectedNbLines = expectedNbLines;
     }
 }
 
