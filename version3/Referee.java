@@ -12,12 +12,10 @@ class PongReferee extends Referee<PongPlayer> {
 
     @Override
     void onLoad() {
-        resourcesManager.loadConfig("https://www.codingame.com/game-factory/default.json");
-        resourcesManager.registerAndLoadTexture("bar", "https://i.imgur.com/WJ475sa.jpg");
-        resourcesManager.registerAndLoadTexture("wall", "https://i.imgur.com/PO788sa.jpg");
-        resourcesManager.registerAndLoadTexture("logo", "https://i.imgur.com/44788sa.jpg");
-        resourcesManager.loadTexture("ball");
-        resourcesManager.loadFont("defaultFont");
+        resourcesManager.registerAndLoadTexture("bar", "https://i.imgur.com/WJ475sa.png");
+        resourcesManager.registerAndLoadTexture("logo", "https://i.imgur.com/44788sa.png");
+        resourcesManager.registerAndLoadTexture("background", "https://i.imgur.com/55788sa.jpg");
+        resourcesManager.registerAndLoadTexture("ball", "https://i.imgur.com/KS788sa.png");
         resourcesManager.registerAndLoadReplay("replay1", 548451);
         resourcesManager.registerAndLoadReplay("replay2", 548452);
     }
@@ -28,11 +26,12 @@ class PongReferee extends Referee<PongPlayer> {
     public void onInit() {
         world.setSize(1000, 1000);
         world.setSplashLogo("logo");
+        world.createSprite("background").setTexture("background");
         replayManager.playLoop("replay1", "replay2");
     }
 
     /**
-     * Executed when the game is played
+     * Just before starting the Game Loop
      */
     @Override
     void onStart() {
