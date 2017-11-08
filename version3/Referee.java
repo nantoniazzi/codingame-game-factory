@@ -23,6 +23,7 @@ class PongReferee extends Referee<PongPlayer> {
     /**
      * Executed when the viewer is loaded
      */
+    @Override
     public void onInit() {
         world.setSize(1000, 1000);
         world.setSplashLogo("logo");
