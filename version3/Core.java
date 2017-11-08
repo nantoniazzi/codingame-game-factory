@@ -39,16 +39,22 @@ abstract class InOutManager {
 class Vector {
     double x;
     double y;
-    
+
     Vector mul(double factor) {
         return this;
     }
 }
 
+@FunctionalInterface
+interface ImpactHandler {
+    boolean apply(Impact impact);
+}
+
 class PhysicalEntity extends Entity {
     Vector speed;
     double mass;
-    
+    ImpactHandler impactHandler = this::defaultImpactBehaviour;
+
     void setSpeed(Vector speed) {
         this.speed.x = speed.x;
         this.speed.y = speed.y;
@@ -57,11 +63,36 @@ class PhysicalEntity extends Entity {
     public PhysicalEntity(String id) {
         super(id);
     }
-    
-    void onImpact(Impact impact) {
+
+    void onImpact(ImpactHandler impactHandler) {
+        this.impactHandler = impactHandler;
+    }
+
+    boolean defaultImpactBehaviour(Impact impact) {
         setGlobalX((int) Math.round(impact.x));
         setGlobalY((int) Math.round(impact.y));
         setSpeed(speed.mul(-1.0));
+        
+        return true;
+    }
+
+    ImpactHandler getImpactHandler() {
+        return this.impactHandler;
+    }
+    
+    public PhysicalEntity addChild(Entity entity) {
+        super.addChild(entity);
+        return this;
+    }
+
+    public PhysicalEntity setX(int x) {
+        super.setX(x);
+        return this;
+    }
+
+    public PhysicalEntity setY(int x) {
+        super.setY(x);
+        return this;
     }
 }
 
@@ -71,12 +102,12 @@ class CirclePhysicalEntity extends PhysicalEntity {
     public CirclePhysicalEntity(String id) {
         super(id);
     }
-    
+
     public CirclePhysicalEntity addChild(Entity entity) {
         super.addChild(entity);
         return this;
     }
-    
+
     public CirclePhysicalEntity setX(int x) {
         super.setX(x);
         return this;
@@ -106,7 +137,7 @@ class RectPhysicalEntity extends PhysicalEntity {
         super.addChild(entity);
         return this;
     }
-    
+
     public RectPhysicalEntity setX(int x) {
         super.setX(x);
         return this;
@@ -141,13 +172,14 @@ class RectPhysicalEntity extends PhysicalEntity {
 class Impact {
     double x;
     double y;
-    PhysicalEntity collided;
+    PhysicalEntity entityA;
+    PhysicalEntity entityB;
     double time;
-    Vector speed;
 }
 
 class PhysicalWorld {
     List<PhysicalEntity> entities = new ArrayList<>();
+    @Inject World world;
 
     CirclePhysicalEntity createCirlce(String id) {
         CirclePhysicalEntity ret = new CirclePhysicalEntity(id);
@@ -162,6 +194,7 @@ class PhysicalWorld {
     }
     
     void update() {
+        // solve collisions and calls all world.update(delta);
     }
 }
 
@@ -196,11 +229,11 @@ abstract class Player {
         this.deathReason = reason;
         this.active = false;
     }
-    
+
     public Integer getScore() {
         return score;
     }
-    
+
     public void setScore(int score) {
         this.score = score;
     }
@@ -219,7 +252,7 @@ interface ResourcesManager {
 }
 
 interface ReplayManager {
-    void playLoop(String ...replayIds);
+    void playLoop(String... replayIds);
 }
 
 abstract class Referee<TPlayer> {

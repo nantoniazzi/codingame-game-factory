@@ -32,6 +32,20 @@ class PongReferee extends Referee<PongPlayer> {
     }
 
     /**
+     * Override the ball collision behaviour
+     * @param impact parameters
+     */
+    private boolean handleBallImpact(Impact impact) {
+        // We override the impact behaviour if we collide with players
+        if (impact.entityB.getId().startsWith("physical-player")) {
+            ball.setSpeed(new Vector()); // TODO: compute the new impact direction
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
      * Executed when the game is played
      */
     @Override
@@ -42,17 +56,19 @@ class PongReferee extends Referee<PongPlayer> {
                 .setRadius(5.0)
                 .addChild(world.createSprite("ball").setTexture("ball", 0.5, 0.5));
 
-        physicalWorld.createRect("physical-top-wall")
-            .setWidth(world.getWidth())
-            .setHeight(2)
-            .addChild(world.createSprite("top-wall").setTexture("wall"));
+        ball.onImpact(this::handleBallImpact);
 
         physicalWorld.createRect("physical-top-wall")
-            .setY(world.getHeight() - 2)
-            .setWidth(world.getWidth())
-            .setHeight(2)
-            .addChild(world.createSprite("bottom-wall").setTexture("wall"));
-        
+                .setWidth(world.getWidth())
+                .setHeight(2)
+                .addChild(world.createSprite("top-wall").setTexture("wall"));
+
+        physicalWorld.createRect("physical-top-wall")
+                .setY(world.getHeight() - 2)
+                .setWidth(world.getWidth())
+                .setHeight(2)
+                .addChild(world.createSprite("bottom-wall").setTexture("wall"));
+
         gameManager.getPlayer(0).entity = physicalWorld.createRect("physical-player-0")
                 .setX(10)
                 .setY(world.getHeight() / 2)
@@ -69,7 +85,7 @@ class PongReferee extends Referee<PongPlayer> {
                 .setAnchorY(10)
                 .setWidth(4)
                 .setHeight(20)
-                .addChild(world.createSprite("p1").setColor("0x00ff00").setTexture("bar", 0.5, 0.5));
+                .addChild(world.createSprite("p0").setColor("0x00ff00").setTexture("bar", 0.5, 0.5));
     }
 
     /**
@@ -93,7 +109,7 @@ class PongReferee extends Referee<PongPlayer> {
             } catch (ReadActionsException | PlayerTimeoutException e) {
             }
         }
-        
+
         physicalWorld.update();
 
         if (ball.getX() < 0) {
@@ -102,13 +118,13 @@ class PongReferee extends Referee<PongPlayer> {
             gameManager.getPlayer(1).die("give the reason explanation...");
         }
     }
-    
+
     /**
      * Game finished, ensure that we have assigned the correct score to each players
      */
     @Override
     void onEnd() {
-        for(PongPlayer p : gameManager.getPlayers()) {
+        for (PongPlayer p : gameManager.getPlayers()) {
             p.setScore(p.isActive() ? 1 : 0);
         }
     }
