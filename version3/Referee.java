@@ -32,20 +32,6 @@ class PongReferee extends Referee<PongPlayer> {
     }
 
     /**
-     * Override the ball collision behaviour
-     * @param impact parameters
-     */
-    private boolean handleBallImpact(Impact impact) {
-        // We override the impact behaviour if we collide with players
-        if (impact.entityB.getId().startsWith("physical-player")) {
-            ball.setSpeed(new Vector()); // TODO: compute the new impact direction
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
      * Executed when the game is played
      */
     @Override
@@ -54,7 +40,7 @@ class PongReferee extends Referee<PongPlayer> {
                 .setX(world.getWidth() / 2)
                 .setY(world.getHeight() / 2)
                 .setRadius(5.0)
-                .onImpact(this::handleBallImpact)
+                .onImpact(this::handleBallImpact) // override the impact behaviour in some cases
                 .addChild(world.createSprite("ball").setTexture("ball", 0.5, 0.5));
 
         physicalWorld.createRect("physical-top-wall")
@@ -126,5 +112,20 @@ class PongReferee extends Referee<PongPlayer> {
         for (PongPlayer p : gameManager.getPlayers()) {
             p.setScore(p.isActive() ? 1 : 0);
         }
+    }
+
+    /**
+     * Override the ball collision behaviour
+     * @param impact parameters
+     */
+    private boolean handleBallImpact(Impact impact) {
+        // We override the impact behaviour if we collide with players
+        if (impact.entityB.getId().startsWith("physical-player")) {
+            ball.setSpeed(new Vector()); // TODO: compute the new impact direction
+            return true;
+        }
+
+        // default behaviour applied
+        return false;
     }
 }
